@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="br.com.luizalabs.luizalabs.MainActivity">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/space_five"
+        android:layout_marginStart="@dimen/space_five"
+        android:layout_marginEnd="@dimen/space_five"
+        android:layout_marginRight="@dimen/space_five"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="@dimen/space_ten"
+        app:cardCornerRadius="@dimen/card_view_corner_radius">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/city_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@color/silver_chalice"
+                android:textSize="@dimen/font_twenty"
+                android:textStyle="bold"
+                android:text="São paulo" />
+
+            <TextView
+                android:id="@+id/temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@color/silver_chalice"
+                android:textSize="@dimen/font_fifty"
+                android:text="20°" />
+
+            <ImageView
+                android:id="@+id/weather_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/city_name"
+                android:layout_marginTop="@dimen/space_ten"
+                android:src="@drawable/weather_clouds" />
+
+            <TextView
+                android:id="@+id/temperature_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/weather_image"
+                android:layout_alignTop="@+id/weather_image"
+                android:layout_marginLeft="@dimen/space_five"
+                android:layout_marginStart="@dimen/space_five"
+                android:layout_toEndOf="@+id/weather_image"
+                android:layout_toRightOf="@+id/weather_image"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center_vertical"
+                android:textColor="@color/silver_chalice"
+                android:textSize="@dimen/font_twenty"
+                android:text="Céu aberto" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/weather_image"
+                android:layout_marginTop="@dimen/space_ten"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/temperature_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:textColor="@color/silver_chalice"
+                    android:textSize="17sp"
+                    android:text="Min 19°" />
+
+                <TextView
+                    android:id="@+id/temperature_max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/space_ten"
+                    android:layout_marginStart="@dimen/space_ten"
+                    android:fontFamily="sans-serif-light"
+                    android:textColor="@color/silver_chalice"
+                    android:textSize="17sp"
+                    android:text="Max 19°" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

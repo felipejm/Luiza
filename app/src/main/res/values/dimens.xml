@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_view_corner_radius">2dp</dimen>
+
+    <dimen name="space_ten">10dp</dimen>
+    <dimen name="space_five">5dp</dimen>
+    <dimen name="space_four">4dp</dimen>
+
+    <dimen name="font_thirty">30sp</dimen>
+    <dimen name="font_twenty">20sp</dimen>
+    <dimen name="font_fifty">50sp</dimen>
+
+
+</resources>

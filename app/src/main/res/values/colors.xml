@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1D8FCE</color>
+    <color name="colorPrimaryDark">#1877ac</color>
+    <color name="colorAccent">#1D8FCE</color>
+
+    <color name="silver_chalice">#A1A1A1</color>
+</resources>
