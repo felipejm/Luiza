@@ -35,6 +35,8 @@ dependencies {
 
     //Play Services
     compile 'com.google.android.gms:play-services-maps:10.2.6'
+    compile 'com.google.android.gms:play-services-location:10.2.6'
+    compile 'com.google.maps.android:android-maps-utils:0.4+'
 
     //Support
     compile 'com.android.support:appcompat-v7:25.3.1'
