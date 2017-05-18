@@ -4,6 +4,6 @@ import java.util.List;
 
 import br.com.luizalabs.luizalabs.weather.model.Weather;
 
-public interface WeatherCardsView {
+public interface WeatherCardsView{
     void configureWeatherCards(List<Weather> weathers);
 }

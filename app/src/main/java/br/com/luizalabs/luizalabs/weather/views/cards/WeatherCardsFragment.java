@@ -1,23 +1,17 @@
 package br.com.luizalabs.luizalabs.weather.views.cards;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.SphericalUtil;
@@ -32,7 +26,7 @@ import br.com.luizalabs.luizalabs.weather.model.Weather;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WeatherCardsActivity extends AppCompatActivity implements WeatherCardsView {
+public class WeatherCardsFragment extends Fragment implements WeatherCardsView {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -43,13 +37,14 @@ public class WeatherCardsActivity extends AppCompatActivity implements WeatherCa
     @Inject
     WeatherCardsPresenter presenter;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_weather_cards, container, false);
+        ButterKnife.bind(this, view);
 
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        activity.setSupportActionBar(toolbar);
 
         DaggerWeatherCardsComponent.builder()
                 .appComponent(App.getAppComponent())
@@ -58,17 +53,19 @@ public class WeatherCardsActivity extends AppCompatActivity implements WeatherCa
                 .inject(this);
 
         presenter.loadWeather();
-        presenter.configureGoogleApiClient();
+        presenter.configureGoogleApiClient(getContext());
+
+        return view;
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         presenter.connectGoogleApiClient();
         super.onStart();
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         presenter.disconnectGoogleApiClient();
         super.onStop();
     }
@@ -76,7 +73,7 @@ public class WeatherCardsActivity extends AppCompatActivity implements WeatherCa
     @Override
     public void configureWeatherCards(List<Weather> weathers) {
         WeatherCardsAdapter adapter = new WeatherCardsAdapter(weathers);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

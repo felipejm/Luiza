@@ -1,7 +1,6 @@
 package br.com.luizalabs.luizalabs.weather.views.cards;
 
 import br.com.luizalabs.luizalabs.AppComponent;
-import br.com.luizalabs.luizalabs.AppScope;
 import dagger.Component;
 
 @Component(
@@ -9,5 +8,5 @@ import dagger.Component;
         modules = WeatherCardsModule.class
 )
 public interface WeatherCardsComponent {
-    void inject(WeatherCardsActivity activity);
+    void inject(WeatherCardsFragment activity);
 }

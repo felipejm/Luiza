@@ -1,6 +1,7 @@
 package br.com.luizalabs.luizalabs.weather.views.cards;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import br.com.luizalabs.luizalabs.utils.RxComposer;
 import br.com.luizalabs.luizalabs.weather.model.Weather;
 import br.com.luizalabs.luizalabs.weather.model.WeatherInteractor;
 
-public class WeatherCardsPresenterImpl extends AppCompatActivity  implements WeatherCardsPresenter,
+public class WeatherCardsPresenterImpl implements WeatherCardsPresenter,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private WeatherInteractor interactor;
@@ -46,9 +47,9 @@ public class WeatherCardsPresenterImpl extends AppCompatActivity  implements Wea
     }
 
     @Override
-    public void configureGoogleApiClient(){
+    public void configureGoogleApiClient(Context context){
         if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(this)
+            googleApiClient = new GoogleApiClient.Builder(context)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
