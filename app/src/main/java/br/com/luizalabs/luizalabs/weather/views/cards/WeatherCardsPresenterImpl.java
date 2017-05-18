@@ -21,8 +21,8 @@ public class WeatherCardsPresenterImpl extends AppCompatActivity  implements Wea
 
     @Override
     public void loadWeather(){
-        interactor.getWeather().compose(RxComposer.newThread()).subscribe(weather -> {
-            view.configureWeatherCards(Arrays.asList(weather));
+        interactor.getWeather().compose(RxComposer.newThread()).subscribe(weathers -> {
+            view.configureWeatherCards((weathers));
         }, throwable -> {
             Log.e("WeatherCardsPresenter","loadWeather",throwable);
         });

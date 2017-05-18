@@ -1,11 +1,8 @@
 
 package br.com.luizalabs.luizalabs.weather.model;
 
-import java.util.Locale;
+import java.util.List;
 
-import javax.inject.Inject;
-
-import br.com.luizalabs.luizalabs.BuildConfig;
 import br.com.luizalabs.luizalabs.weather.api.WeatherApi;
 import io.reactivex.Observable;
 
@@ -20,8 +17,8 @@ public class WeatherInteractorImpl implements WeatherInteractor {
     }
 
     @Override
-    public Observable<Weather> getWeather(){
-       return weatherApi.getForCity(6320527)
-               .map(apiWeather -> mapper.transform(apiWeather));
+    public Observable<List<Weather>> getWeather(){
+       return weatherApi.getForArea("12,32,15,37,10")
+               .map(apiWeathers -> mapper.transform(apiWeathers));
     }
 }

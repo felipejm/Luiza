@@ -39,8 +39,8 @@ public class WeatherCardsAdapter extends RecyclerView.Adapter<WeatherCardsAdapte
         Context context = holder.itemView.getContext();
         Weather weather = weathers.get(position);
 
-        holder.cityName.setText(StringUtils.capitalize(weather.getCityName()));
-        holder.temperatureDescription.setText(StringUtils.capitalize(weather.getDescription()));
+        holder.cityName.setText(weather.getCityName());
+        holder.temperatureDescription.setText(weather.getDescription());
         holder.temperature.setText(String.format(context.getString(R.string.temperature_format), weather.getTemperature()));
         holder.temperatureMin.setText(String.format(context.getString(R.string.min_temperature_format), weather.getTemperatureMin()));
         holder.temperatureMax.setText(String.format(context.getString(R.string.max_temperature_format), weather.getTemperatureMax()));

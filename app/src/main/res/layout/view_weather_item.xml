@@ -63,7 +63,6 @@
                 android:layout_toRightOf="@+id/weather_image"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center_vertical"
-                android:inputType="textCapWords"
                 android:textColor="@color/silver_chalice"
                 android:textSize="@dimen/font_twenty"
                 tools:text="Céu aberto" />

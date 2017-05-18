@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class ApiWeather {
+public class ApiWeatherCity {
 
     @SerializedName("weather")
     private List<ApiWeatherInfo> apiWeatherInfo = new ArrayList<>();
