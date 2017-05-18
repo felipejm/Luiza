@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="br.com.luizalabs.luizalabs.MainActivity">
+    tools:context=".weather.views.cards.WeatherCardsActivity">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                 android:textColor="@color/silver_chalice"
                 android:textSize="@dimen/font_twenty"
                 android:textStyle="bold"
-                android:text="São paulo" />
+                tools:text="São paulo" />
 
             <TextView
                 android:id="@+id/temperature"
@@ -41,7 +41,7 @@
                 android:fontFamily="sans-serif-light"
                 android:textColor="@color/silver_chalice"
                 android:textSize="@dimen/font_fifty"
-                android:text="20°" />
+                tools:text="20°" />
 
             <ImageView
                 android:id="@+id/weather_image"
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/city_name"
                 android:layout_marginTop="@dimen/space_ten"
-                android:src="@drawable/weather_clouds" />
+                android:src="@drawable/weather_clear" />
 
             <TextView
                 android:id="@+id/temperature_description"
@@ -63,9 +63,10 @@
                 android:layout_toRightOf="@+id/weather_image"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center_vertical"
+                android:inputType="textCapWords"
                 android:textColor="@color/silver_chalice"
                 android:textSize="@dimen/font_twenty"
-                android:text="Céu aberto" />
+                tools:text="Céu aberto" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,7 +82,7 @@
                     android:fontFamily="sans-serif-light"
                     android:textColor="@color/silver_chalice"
                     android:textSize="17sp"
-                    android:text="Min 19°" />
+                    tools:text="@string/min_temperature_format" />
 
                 <TextView
                     android:id="@+id/temperature_max"
@@ -92,7 +93,7 @@
                     android:fontFamily="sans-serif-light"
                     android:textColor="@color/silver_chalice"
                     android:textSize="17sp"
-                    android:text="Max 19°" />
+                    tools:text="@string/max_temperature_format" />
 
             </LinearLayout>
 
