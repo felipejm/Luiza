@@ -15,6 +15,8 @@ public interface WeatherPresenter {
 
     void switchToolbarTemperatureUnitIcon(MenuItem item);
 
+    void switchToolbarMapListIcon(MenuItem item);
+
     void configureToolbarTemperatureUnitIcon(MenuItem item);
 
     boolean isNotShowingLoadingFragment();

@@ -10,6 +10,9 @@ public class ApiWeatherCity {
     @SerializedName("weather")
     private List<ApiWeatherInfo> apiWeatherInfo = new ArrayList<>();
 
+    @SerializedName("coord")
+    private ApiWeatherCoord apiWeatherCoord;
+
     @SerializedName("base")
     private String base;
 
@@ -30,6 +33,10 @@ public class ApiWeatherCity {
 
     @SerializedName("cod")
     private Integer code;
+
+    public ApiWeatherCoord getApiWeatherCoord() {
+        return apiWeatherCoord;
+    }
 
     public List<ApiWeatherInfo> getApiWeatherInfo() {
         return apiWeatherInfo;

@@ -99,15 +99,24 @@ public class WeatherPresenterImpl implements WeatherPresenter{
     }
 
     @Override
+    public void switchToolbarMapListIcon(MenuItem item){
+        if(currentFragment == WEATHER_FRAGMENT.CARDS){
+            item.setIcon(R.drawable.ic_list);
+        }else{
+            item.setIcon(R.drawable.ic_maps);
+        }
+    }
+
+    @Override
     public void configureToolbarTemperatureUnitIcon(MenuItem item){
         UserPreference userPreference = userPreferenceInteractor.get();
 
         if(userPreference.getTemperaturaUnit() == TEMPERATURA_UNIT.CELSIUS){
             item.setIcon(R.drawable.ic_celsius);
-            item.setTitle("Mudar para fahrenheit");
+            item.setTitle(R.string.change_to_fahrenheit);
         }else{
             item.setIcon(R.drawable.ic_fahrenheit);
-            item.setTitle("Mudar para celsius");
+            item.setTitle(R.string.change_to_celsius);
         }
     }
 }

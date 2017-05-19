@@ -1,7 +1,7 @@
 package br.com.luizalabs.luizalabs.utils;
 
 
-public class TemperatureConverterUtil {
+public class TemperatureConverterHelper {
 
     public static String convertCelsiusToFahrenheit(String celsius){
         int celsiusValue = Integer.valueOf(celsius);

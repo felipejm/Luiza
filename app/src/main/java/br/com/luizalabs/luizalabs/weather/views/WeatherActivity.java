@@ -63,6 +63,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView{
     public boolean onCreateOptionsMenu(Menu menu) {
         if(presenter.isNotShowingLoadingFragment()) {
             getMenuInflater().inflate(R.menu.menu, menu);
+
             presenter.configureToolbarTemperatureUnitIcon(menu.findItem(R.id.action_unit));
         }
         return true;
@@ -78,6 +79,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView{
                 return true;
 
             case R.id.action_map:
+                presenter.switchToolbarMapListIcon(item);
                 presenter.switchFragments();
                 return true;
         }

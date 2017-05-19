@@ -5,4 +5,10 @@
     <string name="min_temperature_format">Min %s°</string>
     <string name="max_temperature_format">Max %s°</string>
     <string name="loading_weather_data">Carregando informaçoes</string>
+    <string name="dialog_need_location_title">Localização</string>
+    <string name="button_cancel">CANCELAR</string>
+    <string name="button_active">Ativar</string>
+    <string name="dialog_need_location_message">A sua localização é necessária para encontrarmos as previsões do tempo perto de você.</string>
+    <string name="change_to_fahrenheit">Mudar para fahrenheit</string>
+    <string name="change_to_celsius">Mudar para celsius</string>
 </resources>

@@ -11,7 +11,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import br.com.luizalabs.luizalabs.R;
+import br.com.luizalabs.luizalabs.utils.DrawableHelper;
 import br.com.luizalabs.luizalabs.weather.api.ApiWeatherCity;
+import br.com.luizalabs.luizalabs.weather.api.ApiWeatherCoord;
 import br.com.luizalabs.luizalabs.weather.api.ApiWeatherInfo;
 import br.com.luizalabs.luizalabs.weather.api.ApiWeatherMain;
 import br.com.luizalabs.luizalabs.weather.api.ApiWeathers;
@@ -38,11 +40,16 @@ public class WeatherMapper {
         Weather weather = new Weather();
         weather.setCityName(StringUtils.capitalize(apiWeatherCity.getName()));
 
+        ApiWeatherCoord apiWeatherCoord = apiWeatherCity.getApiWeatherCoord();
+        if(apiWeatherCoord != null){
+            weather.setLatitude(apiWeatherCoord.getLat());
+            weather.setLongitude(apiWeatherCoord.getLon());
+        }
+
         List<ApiWeatherInfo> apiWeatherInfos = apiWeatherCity.getApiWeatherInfo();
         if(!apiWeatherInfos.isEmpty()) {
             ApiWeatherInfo apiWeatherInfo = apiWeatherInfos.get(0);
-
-            weather.setIcon(apiWeatherInfo.getIcon());
+            weather.setIcon(String.format("ic_%s", apiWeatherInfo.getIcon()));
             weather.setDescription(StringUtils.capitalize(apiWeatherInfo.getDescription()));
         }
 

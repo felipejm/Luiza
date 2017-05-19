@@ -1,16 +1,17 @@
 
 package br.com.luizalabs.luizalabs.weather.model;
 
-import android.support.annotation.DrawableRes;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
-import br.com.luizalabs.luizalabs.utils.TemperatureConverterUtil;
+import br.com.luizalabs.luizalabs.utils.TemperatureConverterHelper;
 
 public class Weather implements Serializable {
+
+    private Double latitude;
+    private Double longitude;
 
     private String cityName;
     private String description;
@@ -27,18 +28,34 @@ public class Weather implements Serializable {
                 && temperaturaUnit == TEMPERATURA_UNIT.FAHRENHEIT) {
 
             this.temperaturaUnit = TEMPERATURA_UNIT.FAHRENHEIT;
-            temperature = TemperatureConverterUtil.convertCelsiusToFahrenheit(temperature);
-            temperatureMin = TemperatureConverterUtil.convertCelsiusToFahrenheit(temperatureMin);
-            temperatureMax = TemperatureConverterUtil.convertCelsiusToFahrenheit(temperatureMax);
+            temperature = TemperatureConverterHelper.convertCelsiusToFahrenheit(temperature);
+            temperatureMin = TemperatureConverterHelper.convertCelsiusToFahrenheit(temperatureMin);
+            temperatureMax = TemperatureConverterHelper.convertCelsiusToFahrenheit(temperatureMax);
 
         } else if (this.temperaturaUnit == TEMPERATURA_UNIT.FAHRENHEIT
                 && temperaturaUnit == TEMPERATURA_UNIT.CELSIUS) {
 
             this.temperaturaUnit = TEMPERATURA_UNIT.CELSIUS;
-            temperature = TemperatureConverterUtil.convertFahrenheitToCelsius(temperature);
-            temperatureMin = TemperatureConverterUtil.convertFahrenheitToCelsius(temperatureMin);
-            temperatureMax = TemperatureConverterUtil.convertFahrenheitToCelsius(temperatureMax);
+            temperature = TemperatureConverterHelper.convertFahrenheitToCelsius(temperature);
+            temperatureMin = TemperatureConverterHelper.convertFahrenheitToCelsius(temperatureMin);
+            temperatureMax = TemperatureConverterHelper.convertFahrenheitToCelsius(temperatureMax);
         }
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public String getIcon() {
@@ -99,6 +116,7 @@ public class Weather implements Serializable {
 
     @Override
     public boolean equals(Object o) {
+
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
@@ -106,19 +124,23 @@ public class Weather implements Serializable {
         Weather weather = (Weather) o;
 
         return new EqualsBuilder()
-                .append(icon, weather.icon)
+                .append(latitude, weather.latitude)
+                .append(longitude, weather.longitude)
                 .append(cityName, weather.cityName)
                 .append(description, weather.description)
                 .append(temperature, weather.temperature)
                 .append(temperatureMin, weather.temperatureMin)
                 .append(temperatureMax, weather.temperatureMax)
                 .append(temperaturaUnit, weather.temperaturaUnit)
+                .append(icon, weather.icon)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(latitude)
+                .append(longitude)
                 .append(cityName)
                 .append(description)
                 .append(temperature)

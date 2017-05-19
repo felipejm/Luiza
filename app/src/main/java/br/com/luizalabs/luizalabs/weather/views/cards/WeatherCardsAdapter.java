@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.luizalabs.luizalabs.R;
+import br.com.luizalabs.luizalabs.utils.DrawableHelper;
 import br.com.luizalabs.luizalabs.weather.api.ApiWeatherInfo;
 import br.com.luizalabs.luizalabs.weather.model.Weather;
 import butterknife.BindView;
@@ -47,24 +48,12 @@ public class WeatherCardsAdapter extends RecyclerView.Adapter<WeatherCardsAdapte
         holder.temperature.setText(String.format(context.getString(R.string.temperature_format), weather.getTemperature()));
         holder.temperatureMin.setText(String.format(context.getString(R.string.min_temperature_format), weather.getTemperatureMin()));
         holder.temperatureMax.setText(String.format(context.getString(R.string.max_temperature_format), weather.getTemperatureMax()));
-        holder.weatherImage.setImageDrawable( getIconDrawable(context, weather));
+        holder.weatherImage.setImageDrawable(DrawableHelper.fromName(context,weather.getIcon(), R.drawable.ic_01d));
     }
 
     @Override
     public int getItemCount() {
         return weathers.size();
-    }
-
-    private Drawable getIconDrawable(Context context, Weather weather){
-        Resources resources = context.getResources();
-        int resourceId = resources.getIdentifier(String.format("ic_%s", weather.getIcon()), "drawable",
-                context.getPackageName());
-
-        if(resourceId <= 0){
-            resourceId = R.drawable.ic_01d;
-        }
-
-        return ContextCompat.getDrawable(context, resourceId);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
