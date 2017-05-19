@@ -18,6 +18,7 @@ import java.util.List;
 
 import br.com.luizalabs.luizalabs.user.model.UserPreference;
 import br.com.luizalabs.luizalabs.user.model.UserPreferenceInteractor;
+import br.com.luizalabs.luizalabs.utils.LocationHelper;
 import br.com.luizalabs.luizalabs.utils.RxComposer;
 import br.com.luizalabs.luizalabs.weather.model.Weather;
 import br.com.luizalabs.luizalabs.weather.model.WeatherInteractor;
@@ -41,10 +42,26 @@ public class WeatherCardsPresenterImpl implements WeatherCardsPresenter,
     }
 
     @Override
-    public void loadWeathers(){
+    public void loadWeathers(LatLng lastLocation){
+        if(lastLocation != null) {
+            interactor.getWeatherNearbyLocation(lastLocation).compose(RxComposer.newThread()).subscribe(weathers1 -> {
+                Log.d("Weathers", weathers1.toString());
+            });
+        }
+
         this.weathers = interactor.getCache();
         configureTemperatureUnit();
         view.configureWeatherCards((weathers));
+    }
+
+    @Override
+    public void loadWeatherOfLastLocation() {
+        if (LocationHelper.isLocationAvailable(googleApiClient) && view.hasLocationPermission()) {
+            LatLng lastLocation = LocationHelper.getLastLocation(googleApiClient);
+            loadWeathers(lastLocation);
+        } else {
+            view.showLocationRequiredDialog(googleApiClient);
+        }
     }
 
     @Override
@@ -75,31 +92,9 @@ public class WeatherCardsPresenterImpl implements WeatherCardsPresenter,
     }
 
     @Override
-    public Location getLastPosition(){
-        Location lastLocation = null;
-       /* if(ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        }*/
-
-        return lastLocation;
-    }
-
-    @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Location lastPosition = getLastPosition();
 
-        if(lastPosition != null) {
-            int distance = 50000;
-            LatLng latLng = new LatLng(lastPosition.getLatitude(), lastPosition.getLongitude());
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            LatLngBounds initialBounds = builder.include(latLng).build();
-
-            LatLng topRight = SphericalUtil.computeOffset(initialBounds.northeast, distance * Math.sqrt(2), 45);
-            LatLng bottomRight = SphericalUtil.computeOffset(initialBounds.northeast, distance * Math.sqrt(2), 135);
-            LatLng bottomLeft = SphericalUtil.computeOffset(initialBounds.southwest, distance * Math.sqrt(2), 225);
-            LatLng topLeft = SphericalUtil.computeOffset(initialBounds.southwest, distance * Math.sqrt(2), 315);
-        }
+        loadWeatherOfLastLocation();
     }
 
     @Override

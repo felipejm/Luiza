@@ -93,7 +93,7 @@ public class WeatherMapPresenterImpl implements WeatherMapPresenter,
             LatLng lastLocation = LocationHelper.getLastLocation(googleApiClient);
             view.moveMapToMyLocation(lastLocation);
         } else {
-            view.showLocationRequiredDialog();
+            view.showLocationRequiredDialog(googleApiClient);
         }
     }
 

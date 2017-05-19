@@ -19,7 +19,7 @@ import br.com.luizalabs.luizalabs.weather.views.map.WeatherMapFragment;
 
 public class WeatherPresenterImpl implements WeatherPresenter{
 
-    public enum WEATHER_FRAGMENT{
+    private enum WEATHER_FRAGMENT{
         LOADING, CARDS, MAP
     }
 
@@ -87,11 +87,11 @@ public class WeatherPresenterImpl implements WeatherPresenter{
 
         if(userPreference.getTemperaturaUnit() == TEMPERATURA_UNIT.CELSIUS){
             item.setIcon(R.drawable.ic_fahrenheit);
-            item.setTitle("Mudar para celsius");
+            item.setTitle(R.string.change_to_celsius);
             userPreference.setTemperaturaUnit(TEMPERATURA_UNIT.FAHRENHEIT);
         }else{
             item.setIcon(R.drawable.ic_celsius);
-            item.setTitle("Mudar para fahrenheit");
+            item.setTitle(R.string.change_to_fahrenheit);
             userPreference.setTemperaturaUnit(TEMPERATURA_UNIT.CELSIUS);
         }
 
@@ -102,10 +102,12 @@ public class WeatherPresenterImpl implements WeatherPresenter{
     public void switchToolbarMapListIcon(MenuItem item){
         if(currentFragment == WEATHER_FRAGMENT.CARDS){
             item.setIcon(R.drawable.ic_list);
-            item.setTitle(R.string.change_to_map);
+            item.setTitle(R.string.change_to_list);
+
         }else{
             item.setIcon(R.drawable.ic_maps);
-            item.setTitle(R.string.change_to_list);
+            item.setTitle(R.string.change_to_map);
+
         }
     }
 

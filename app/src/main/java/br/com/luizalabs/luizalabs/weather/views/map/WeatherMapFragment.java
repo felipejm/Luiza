@@ -59,8 +59,6 @@ public class WeatherMapFragment extends SupportMapFragment implements WeatherMap
     @Inject
     WeatherMapPresenter presenter;
 
-    private GoogleApiClient googleApiClient;
-
     public static WeatherMapFragment newInstance() {
         return new WeatherMapFragment();
     }
@@ -113,13 +111,13 @@ public class WeatherMapFragment extends SupportMapFragment implements WeatherMap
     }
 
     @Override
-    public void showLocationRequiredDialog(){
+    public void showLocationRequiredDialog(GoogleApiClient googleApiClient){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setCancelable(true);
         builder.setTitle(R.string.dialog_need_location_title);
         builder.setMessage(R.string.dialog_need_location_message);
         builder.setPositiveButton(R.string.button_active, (dialog, which) -> {
-            enableLocation();
+            enableLocation(googleApiClient);
             dialog.dismiss();
         });
 
@@ -141,7 +139,7 @@ public class WeatherMapFragment extends SupportMapFragment implements WeatherMap
         presenter.moveMapToLastLocation();
     }
 
-    private void enableLocation() {
+    private void enableLocation(GoogleApiClient googleApiClient) {
         if(!LocationHelper.isLocationAvailable(googleApiClient)){
             startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 

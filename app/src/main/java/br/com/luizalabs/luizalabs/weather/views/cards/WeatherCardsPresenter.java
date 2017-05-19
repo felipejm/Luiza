@@ -4,10 +4,14 @@ import android.content.Context;
 import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import br.com.luizalabs.luizalabs.weather.model.WeatherInteractor;
 
 public interface WeatherCardsPresenter {
-    void loadWeathers();
+    void loadWeathers(LatLng lastLocation);
+
+    void loadWeatherOfLastLocation();
 
     void configureTemperatureUnit();
 
@@ -16,6 +20,4 @@ public interface WeatherCardsPresenter {
     void connectGoogleApiClient();
 
     void disconnectGoogleApiClient();
-
-    Location getLastPosition();
 }
