@@ -11,4 +11,6 @@
     <string name="dialog_need_location_message">A sua localização é necessária para encontrarmos as previsões do tempo perto de você.</string>
     <string name="change_to_fahrenheit">Mudar para fahrenheit</string>
     <string name="change_to_celsius">Mudar para celsius</string>
+    <string name="change_to_map">Mudar para mapa</string>
+    <string name="change_to_list">Mudar para lista</string>
 </resources>

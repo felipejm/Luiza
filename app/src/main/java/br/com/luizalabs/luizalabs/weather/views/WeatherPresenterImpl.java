@@ -102,8 +102,10 @@ public class WeatherPresenterImpl implements WeatherPresenter{
     public void switchToolbarMapListIcon(MenuItem item){
         if(currentFragment == WEATHER_FRAGMENT.CARDS){
             item.setIcon(R.drawable.ic_list);
+            item.setTitle(R.string.change_to_map);
         }else{
             item.setIcon(R.drawable.ic_maps);
+            item.setTitle(R.string.change_to_list);
         }
     }
 
