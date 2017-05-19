@@ -9,15 +9,9 @@ import com.google.android.gms.maps.model.LatLng;
 import br.com.luizalabs.luizalabs.weather.model.WeatherInteractor;
 
 public interface WeatherCardsPresenter {
-    void loadWeathers(LatLng lastLocation);
-
-    void loadWeatherOfLastLocation();
+    void loadWeathers();
 
     void configureTemperatureUnit();
 
-    void configureGoogleApiClient(Context context);
 
-    void connectGoogleApiClient();
-
-    void disconnectGoogleApiClient();
 }

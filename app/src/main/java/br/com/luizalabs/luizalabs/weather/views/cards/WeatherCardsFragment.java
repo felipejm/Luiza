@@ -38,8 +38,6 @@ import butterknife.ButterKnife;
 
 public class WeatherCardsFragment extends Fragment implements WeatherCardsView {
 
-    public static final int PERMISSION_REQUEST_CODE = 101;
-
     private WeatherCardsAdapter adapter;
 
     @BindView(R.id.recyclerView)
@@ -49,8 +47,7 @@ public class WeatherCardsFragment extends Fragment implements WeatherCardsView {
     WeatherCardsPresenter presenter;
 
     public static WeatherCardsFragment newInstance() {
-        WeatherCardsFragment fragment = new WeatherCardsFragment();
-        return fragment;
+        return new WeatherCardsFragment();
     }
 
     @Nullable
@@ -65,28 +62,20 @@ public class WeatherCardsFragment extends Fragment implements WeatherCardsView {
                 .build()
                 .inject(this);
 
-        presenter.configureGoogleApiClient(getContext());
+        presenter.loadWeathers();
         return view;
     }
 
     @Override
     public void onStart() {
         EventBus.getDefault().register(this);
-        presenter.connectGoogleApiClient();
         super.onStart();
     }
 
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        presenter.disconnectGoogleApiClient();
         super.onStop();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        presenter.loadWeatherOfLastLocation();
     }
 
     @Subscribe(sticky = true)
@@ -98,40 +87,11 @@ public class WeatherCardsFragment extends Fragment implements WeatherCardsView {
     }
 
     @Override
-    public boolean hasLocationPermission() {
-        return ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    @Override
-    public void showLocationRequiredDialog(GoogleApiClient googleApiClient){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setCancelable(true);
-        builder.setTitle(R.string.dialog_need_location_title);
-        builder.setMessage(R.string.dialog_need_location_message);
-        builder.setPositiveButton(R.string.button_active, (dialog, which) -> {
-            enableLocation(googleApiClient);
-            dialog.dismiss();
-        });
-
-        builder.show();
-    }
-
-    @Override
     public void configureWeatherCards(List<Weather> weathers) {
         adapter = new WeatherCardsAdapter(weathers);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-    }
-
-    private void enableLocation(GoogleApiClient googleApiClient) {
-        if(!LocationHelper.isLocationAvailable(googleApiClient)){
-            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-
-        }else if(!hasLocationPermission()) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_CODE);
-        }
     }
 }

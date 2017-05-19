@@ -89,12 +89,8 @@ public class WeatherMapPresenterImpl implements WeatherMapPresenter,
 
     @Override
     public void moveMapToLastLocation() {
-        if (LocationHelper.isLocationAvailable(googleApiClient) && view.hasLocationPermission()) {
-            LatLng lastLocation = LocationHelper.getLastLocation(googleApiClient);
-            view.moveMapToMyLocation(lastLocation);
-        } else {
-            view.showLocationRequiredDialog(googleApiClient);
-        }
+        LatLng lastLocation = LocationHelper.getLastLocation(googleApiClient);
+        view.moveMapToMyLocation(lastLocation);
     }
 
     @Override

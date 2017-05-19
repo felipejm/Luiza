@@ -10,9 +10,5 @@ import java.util.List;
 import br.com.luizalabs.luizalabs.weather.model.Weather;
 
 public interface WeatherMapView {
-    void showLocationRequiredDialog(GoogleApiClient googleApiClient);
-
     void moveMapToMyLocation(LatLng lastLocation);
-
-    boolean hasLocationPermission();
 }

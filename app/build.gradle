@@ -6,6 +6,13 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
 
+    applicationVariants.all { variant ->
+        if(variant.buildType.name == 'debug'){
+            aaptOptions.cruncherEnabled = false
+        }
+    }
+
+
     defaultConfig {
         applicationId "br.com.luizalabs.luizalabs"
         minSdkVersion 16

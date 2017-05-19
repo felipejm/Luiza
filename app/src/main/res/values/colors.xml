@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#1877ac</color>
     <color name="colorAccent">#1D8FCE</color>
 
+    <color name="cornflower_blue">#601d8fce</color>
+    <color name="curious_blue">#1d8fce</color>
+
     <color name="java">#1dbcce</color>
     <color name="silver_chalice">#A1A1A1</color>
 </resources>

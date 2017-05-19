@@ -8,9 +8,14 @@ import com.google.android.gms.maps.GoogleMap;
 public interface WeatherMapPresenter {
 
     void loadWeather(GoogleMap googleMap);
+
     void configureGoogleApiClient(Context context);
+
     void connectGoogleApiClient();
+
     void diconnectGoogleApiClient();
+
     void switchTemperatureUnit();
+
     void moveMapToLastLocation();
 }

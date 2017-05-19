@@ -2,14 +2,16 @@ package br.com.luizalabs.luizalabs.weather.views;
 
 import android.content.Context;
 import android.location.Location;
+import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public interface WeatherPresenter {
-    void loadWeathers();
+    void configureGoogleApiClient(FragmentActivity context);
 
-    void showLoadingFragment();
 
-    void showCardsFragment();
+    void loadWeatherOfLastLocation();
 
     void switchFragments();
 

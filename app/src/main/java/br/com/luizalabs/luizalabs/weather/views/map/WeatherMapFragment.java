@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.SphericalUtil;
@@ -54,7 +57,6 @@ import butterknife.ButterKnife;
 public class WeatherMapFragment extends SupportMapFragment implements WeatherMapView {
 
     public static final int ZOOM_LEVEL = 8;
-    public static final int PERMISSION_REQUEST_CODE = 101;
 
     @Inject
     WeatherMapPresenter presenter;
@@ -73,8 +75,9 @@ public class WeatherMapFragment extends SupportMapFragment implements WeatherMap
                 .build()
                 .inject(this);
 
-        getMapAsync(GoogleMapHelper::configureMap);
         getMapAsync(googleMap -> {
+            GoogleMapHelper.configureMap(googleMap);
+            drawCircleInCenter(googleMap);
             googleMap.setInfoWindowAdapter(new InfoWindowAdapter(getContext()));
             presenter.loadWeather(googleMap);
         });
@@ -105,46 +108,22 @@ public class WeatherMapFragment extends SupportMapFragment implements WeatherMap
     }
 
     @Override
-    public boolean hasLocationPermission() {
-        return ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    @Override
-    public void showLocationRequiredDialog(GoogleApiClient googleApiClient){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setCancelable(true);
-        builder.setTitle(R.string.dialog_need_location_title);
-        builder.setMessage(R.string.dialog_need_location_message);
-        builder.setPositiveButton(R.string.button_active, (dialog, which) -> {
-            enableLocation(googleApiClient);
-            dialog.dismiss();
-        });
-
-        builder.show();
-    }
-
-    @Override
     public void moveMapToMyLocation(LatLng lastLocation) {
         getMapAsync(googleMap -> {
             if(lastLocation != null) {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, ZOOM_LEVEL));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, ZOOM_LEVEL));
             }
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        presenter.moveMapToLastLocation();
-    }
+    private void drawCircleInCenter(GoogleMap googleMap) {
+        Circle circle = googleMap.addCircle(new CircleOptions()
+                .center(googleMap.getCameraPosition().target)
+                .radius(50000)
+                .strokeWidth(1)
+                .strokeColor(ContextCompat.getColor(getContext(), R.color.curious_blue))
+                .fillColor(ContextCompat.getColor(getContext(), R.color.cornflower_blue)));
 
-    private void enableLocation(GoogleApiClient googleApiClient) {
-        if(!LocationHelper.isLocationAvailable(googleApiClient)){
-            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-
-        }else if(!hasLocationPermission()) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_CODE);
-        }
+        googleMap.setOnCameraIdleListener(() -> circle.setCenter(googleMap.getCameraPosition().target));
     }
 }

@@ -7,9 +7,5 @@ import java.util.List;
 import br.com.luizalabs.luizalabs.weather.model.Weather;
 
 public interface WeatherCardsView{
-    boolean hasLocationPermission();
-
-    void showLocationRequiredDialog(GoogleApiClient googleApiClient);
-
     void configureWeatherCards(List<Weather> weathers);
 }

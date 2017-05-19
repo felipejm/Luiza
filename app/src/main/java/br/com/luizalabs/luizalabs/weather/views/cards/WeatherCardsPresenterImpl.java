@@ -24,14 +24,12 @@ import br.com.luizalabs.luizalabs.weather.model.Weather;
 import br.com.luizalabs.luizalabs.weather.model.WeatherInteractor;
 import io.reactivex.Observable;
 
-public class WeatherCardsPresenterImpl implements WeatherCardsPresenter,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class WeatherCardsPresenterImpl implements WeatherCardsPresenter{
 
     private UserPreferenceInteractor userPreferenceInteractor;
     private WeatherInteractor interactor;
     private WeatherCardsView view;
 
-    private GoogleApiClient googleApiClient;
     private List<Weather> weathers;
 
     public WeatherCardsPresenterImpl(UserPreferenceInteractor userPreferenceInteractor,
@@ -42,68 +40,15 @@ public class WeatherCardsPresenterImpl implements WeatherCardsPresenter,
     }
 
     @Override
-    public void loadWeathers(LatLng lastLocation){
-        if(lastLocation != null) {
-            interactor.getWeatherNearbyLocation(lastLocation).compose(RxComposer.newThread()).subscribe(weathers1 -> {
-                Log.d("Weathers", weathers1.toString());
-            });
-        }
-
+    public void loadWeathers(){
         this.weathers = interactor.getCache();
         configureTemperatureUnit();
         view.configureWeatherCards((weathers));
     }
 
     @Override
-    public void loadWeatherOfLastLocation() {
-        if (LocationHelper.isLocationAvailable(googleApiClient) && view.hasLocationPermission()) {
-            LatLng lastLocation = LocationHelper.getLastLocation(googleApiClient);
-            loadWeathers(lastLocation);
-        } else {
-            view.showLocationRequiredDialog(googleApiClient);
-        }
-    }
-
-    @Override
     public void configureTemperatureUnit(){
         UserPreference userPreference = userPreferenceInteractor.get();
         Observable.fromIterable(weathers).forEach(weather -> weather.changeTemperatureUnit(userPreference.getTemperaturaUnit()));
-    }
-
-    @Override
-    public void configureGoogleApiClient(Context context){
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(context)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-    }
-
-    @Override
-    public void connectGoogleApiClient(){
-        googleApiClient.connect();
-    }
-
-    @Override
-    public void disconnectGoogleApiClient(){
-        googleApiClient.connect();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-        loadWeatherOfLastLocation();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 }

@@ -1,9 +1,18 @@
 package br.com.luizalabs.luizalabs.weather.views;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,13 +20,15 @@ import java.lang.annotation.RetentionPolicy;
 import br.com.luizalabs.luizalabs.R;
 import br.com.luizalabs.luizalabs.user.model.UserPreference;
 import br.com.luizalabs.luizalabs.user.model.UserPreferenceInteractor;
+import br.com.luizalabs.luizalabs.utils.LocationHelper;
 import br.com.luizalabs.luizalabs.utils.RxComposer;
 import br.com.luizalabs.luizalabs.weather.model.TEMPERATURA_UNIT;
 import br.com.luizalabs.luizalabs.weather.model.WeatherInteractor;
 import br.com.luizalabs.luizalabs.weather.views.cards.WeatherCardsFragment;
 import br.com.luizalabs.luizalabs.weather.views.map.WeatherMapFragment;
 
-public class WeatherPresenterImpl implements WeatherPresenter{
+public class WeatherPresenterImpl implements WeatherPresenter,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
     private enum WEATHER_FRAGMENT{
         LOADING, CARDS, MAP
@@ -27,6 +38,7 @@ public class WeatherPresenterImpl implements WeatherPresenter{
     private WeatherInteractor interactor;
     private WeatherView view;
 
+    private GoogleApiClient googleApiClient;
     private WEATHER_FRAGMENT currentFragment;
 
     public WeatherPresenterImpl(UserPreferenceInteractor userPreferenceInteractor,
@@ -37,32 +49,42 @@ public class WeatherPresenterImpl implements WeatherPresenter{
     }
 
     @Override
-    public void loadWeathers(){
-        if(interactor.getCache() == null || interactor.getCache().isEmpty()) {
-            interactor.getWeather()
-                    .compose(RxComposer.newThread())
-                    .doOnSubscribe(disposable -> showLoadingFragment())
-                    .doOnError(throwable -> Log.e("WeatherPresenter", "loadWeathers", throwable))
-                    .subscribe(weathers -> {
-                        interactor.setCache(weathers);
-                        view.onWeatherLoaded();
-                        showCardsFragment();
-                    });
-        }else{
-            showCardsFragment();
+    public void configureGoogleApiClient(FragmentActivity activity){
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(activity)
+                    .enableAutoManage(activity, this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
         }
     }
 
     @Override
-    public void showLoadingFragment() {
-        currentFragment = WEATHER_FRAGMENT.LOADING;
-        view.updateFragment(LoadingFragment.newInstance(), false);
+    public void loadWeatherOfLastLocation() {
+        showLoadingFragment();
+
+        if (LocationHelper.isLocationAvailable(googleApiClient) && view.hasLocationPermission()) {
+            LatLng lastLocation = LocationHelper.getLastLocation(googleApiClient);
+            loadWeathers(lastLocation);
+        } else {
+            view.showLocationRequiredDialog(googleApiClient);
+        }
     }
 
     @Override
-    public void showCardsFragment() {
-        currentFragment = WEATHER_FRAGMENT.CARDS;
-        view.updateFragment(WeatherCardsFragment.newInstance(), true);
+    public void onConnected(@Nullable Bundle bundle) {
+        loadWeatherOfLastLocation();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
     @Override
@@ -122,5 +144,30 @@ public class WeatherPresenterImpl implements WeatherPresenter{
             item.setIcon(R.drawable.ic_fahrenheit);
             item.setTitle(R.string.change_to_celsius);
         }
+    }
+
+    private void loadWeathers(LatLng lastLocation){
+        if(lastLocation != null && (interactor.getCache() == null || interactor.getCache().isEmpty())) {
+            interactor.getWeatherNearbyLocation(lastLocation)
+                    .compose(RxComposer.newThread())
+                    .doOnError(throwable -> Log.e("WeatherPresenter", "loadWeathers", throwable))
+                    .subscribe(weathers -> {
+                        interactor.setCache(weathers);
+                        view.onWeatherLoaded();
+                        showCardsFragment();
+                    });
+        }else{
+            showCardsFragment();
+        }
+    }
+
+    private void showCardsFragment() {
+        currentFragment = WEATHER_FRAGMENT.CARDS;
+        view.updateFragment(WeatherCardsFragment.newInstance(), true);
+    }
+
+    private void showLoadingFragment() {
+        currentFragment = WEATHER_FRAGMENT.LOADING;
+        view.updateFragment(LoadingFragment.newInstance(), false);
     }
 }
