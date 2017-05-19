@@ -1,14 +1,10 @@
 package br.com.luizalabs.luizalabs.weather.views.cards;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -18,32 +14,43 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.SphericalUtil;
 
-import java.util.Arrays;
+import java.util.List;
 
+import br.com.luizalabs.luizalabs.user.model.UserPreference;
+import br.com.luizalabs.luizalabs.user.model.UserPreferenceInteractor;
 import br.com.luizalabs.luizalabs.utils.RxComposer;
 import br.com.luizalabs.luizalabs.weather.model.Weather;
 import br.com.luizalabs.luizalabs.weather.model.WeatherInteractor;
+import io.reactivex.Observable;
 
 public class WeatherCardsPresenterImpl implements WeatherCardsPresenter,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private UserPreferenceInteractor userPreferenceInteractor;
     private WeatherInteractor interactor;
     private WeatherCardsView view;
 
     private GoogleApiClient googleApiClient;
+    private List<Weather> weathers;
 
-    public WeatherCardsPresenterImpl(WeatherInteractor interactor, WeatherCardsView view) {
+    public WeatherCardsPresenterImpl(UserPreferenceInteractor userPreferenceInteractor,
+                                     WeatherInteractor interactor, WeatherCardsView view) {
+        this.userPreferenceInteractor = userPreferenceInteractor;
         this.interactor = interactor;
         this.view = view;
     }
 
     @Override
-    public void loadWeather(){
-        interactor.getWeather().compose(RxComposer.newThread()).subscribe(weathers -> {
-            view.configureWeatherCards((weathers));
-        }, throwable -> {
-            Log.e("WeatherCardsPresenter","loadWeather",throwable);
-        });
+    public void loadWeathers(){
+        this.weathers = interactor.getCache();
+        configureTemperatureUnit();
+        view.configureWeatherCards((weathers));
+    }
+
+    @Override
+    public void configureTemperatureUnit(){
+        UserPreference userPreference = userPreferenceInteractor.get();
+        Observable.fromIterable(weathers).forEach(weather -> weather.changeTemperatureUnit(userPreference.getTemperaturaUnit()));
     }
 
     @Override
@@ -70,10 +77,10 @@ public class WeatherCardsPresenterImpl implements WeatherCardsPresenter,
     @Override
     public Location getLastPosition(){
         Location lastLocation = null;
-        if(ActivityCompat.checkSelfPermission(this,
+       /* if(ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        }
+        }*/
 
         return lastLocation;
     }
@@ -82,15 +89,17 @@ public class WeatherCardsPresenterImpl implements WeatherCardsPresenter,
     public void onConnected(@Nullable Bundle bundle) {
         Location lastPosition = getLastPosition();
 
-        int distance = 50000;
-        LatLng latLng = new LatLng(lastPosition.getLatitude(), lastPosition.getLongitude());
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        LatLngBounds initialBounds = builder.include(latLng).build();
+        if(lastPosition != null) {
+            int distance = 50000;
+            LatLng latLng = new LatLng(lastPosition.getLatitude(), lastPosition.getLongitude());
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            LatLngBounds initialBounds = builder.include(latLng).build();
 
-        LatLng topRight = SphericalUtil.computeOffset(initialBounds.northeast, distance * Math.sqrt(2), 45);
-        LatLng bottomRight = SphericalUtil.computeOffset(initialBounds.northeast, distance * Math.sqrt(2), 135);
-        LatLng bottomLeft = SphericalUtil.computeOffset(initialBounds.southwest, distance * Math.sqrt(2), 225);
-        LatLng topLeft = SphericalUtil.computeOffset(initialBounds.southwest, distance * Math.sqrt(2), 315);
+            LatLng topRight = SphericalUtil.computeOffset(initialBounds.northeast, distance * Math.sqrt(2), 45);
+            LatLng bottomRight = SphericalUtil.computeOffset(initialBounds.northeast, distance * Math.sqrt(2), 135);
+            LatLng bottomLeft = SphericalUtil.computeOffset(initialBounds.southwest, distance * Math.sqrt(2), 225);
+            LatLng topLeft = SphericalUtil.computeOffset(initialBounds.southwest, distance * Math.sqrt(2), 315);
+        }
     }
 
     @Override

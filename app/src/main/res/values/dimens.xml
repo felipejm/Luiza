@@ -9,6 +9,6 @@
     <dimen name="font_thirty">30sp</dimen>
     <dimen name="font_twenty">20sp</dimen>
     <dimen name="font_fifty">50sp</dimen>
-
+    <dimen name="font_fifteen">15sp</dimen>
 
 </resources>

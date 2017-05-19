@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import br.com.luizalabs.luizalabs.weather.model.WeatherInteractor;
 
 public interface WeatherCardsPresenter {
-    void loadWeather();
+    void loadWeathers();
+
+    void configureTemperatureUnit();
 
     void configureGoogleApiClient(Context context);
 

@@ -1,12 +1,15 @@
 
 package br.com.luizalabs.luizalabs.weather.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.luizalabs.luizalabs.weather.api.WeatherApi;
 import io.reactivex.Observable;
 
 public class WeatherInteractorImpl implements WeatherInteractor {
+
+    private List<Weather> cache = new ArrayList<>();
 
     private WeatherApi weatherApi;
     private WeatherMapper mapper;
@@ -20,5 +23,15 @@ public class WeatherInteractorImpl implements WeatherInteractor {
     public Observable<List<Weather>> getWeather(){
        return weatherApi.getForArea("12,32,15,37,10")
                .map(apiWeathers -> mapper.transform(apiWeathers));
+    }
+
+    @Override
+    public void setCache(List<Weather> weathers){
+        this.cache = weathers;
+    }
+
+    @Override
+    public List<Weather> getCache() {
+        return cache;
     }
 }

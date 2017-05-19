@@ -8,7 +8,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
-public class Weather implements Serializable{
+import br.com.luizalabs.luizalabs.utils.TemperatureConverterUtil;
+
+public class Weather implements Serializable {
 
     private String cityName;
     private String description;
@@ -16,17 +18,43 @@ public class Weather implements Serializable{
     private String temperature;
     private String temperatureMin;
     private String temperatureMax;
+    private TEMPERATURA_UNIT temperaturaUnit = TEMPERATURA_UNIT.CELSIUS;
 
-    @DrawableRes
-    private int weatherIconRes;
+    private String icon;
 
-    @DrawableRes
-    public int getWeatherIconRes() {
-        return weatherIconRes;
+    public void changeTemperatureUnit(TEMPERATURA_UNIT temperaturaUnit) {
+        if (this.temperaturaUnit == TEMPERATURA_UNIT.CELSIUS
+                && temperaturaUnit == TEMPERATURA_UNIT.FAHRENHEIT) {
+
+            this.temperaturaUnit = TEMPERATURA_UNIT.FAHRENHEIT;
+            temperature = TemperatureConverterUtil.convertCelsiusToFahrenheit(temperature);
+            temperatureMin = TemperatureConverterUtil.convertCelsiusToFahrenheit(temperatureMin);
+            temperatureMax = TemperatureConverterUtil.convertCelsiusToFahrenheit(temperatureMax);
+
+        } else if (this.temperaturaUnit == TEMPERATURA_UNIT.FAHRENHEIT
+                && temperaturaUnit == TEMPERATURA_UNIT.CELSIUS) {
+
+            this.temperaturaUnit = TEMPERATURA_UNIT.CELSIUS;
+            temperature = TemperatureConverterUtil.convertFahrenheitToCelsius(temperature);
+            temperatureMin = TemperatureConverterUtil.convertFahrenheitToCelsius(temperatureMin);
+            temperatureMax = TemperatureConverterUtil.convertFahrenheitToCelsius(temperatureMax);
+        }
     }
 
-    public void setWeatherIconRes(@DrawableRes int weatherIconRes) {
-        this.weatherIconRes = weatherIconRes;
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public TEMPERATURA_UNIT getTemperaturaUnit() {
+        return temperaturaUnit;
+    }
+
+    public void setTemperaturaUnit(TEMPERATURA_UNIT temperaturaUnit) {
+        this.temperaturaUnit = temperaturaUnit;
     }
 
     public String getCityName() {
@@ -78,11 +106,13 @@ public class Weather implements Serializable{
         Weather weather = (Weather) o;
 
         return new EqualsBuilder()
+                .append(icon, weather.icon)
+                .append(cityName, weather.cityName)
+                .append(description, weather.description)
                 .append(temperature, weather.temperature)
                 .append(temperatureMin, weather.temperatureMin)
                 .append(temperatureMax, weather.temperatureMax)
-                .append(cityName, weather.cityName)
-                .append(description, weather.description)
+                .append(temperaturaUnit, weather.temperaturaUnit)
                 .isEquals();
     }
 
@@ -94,6 +124,8 @@ public class Weather implements Serializable{
                 .append(temperature)
                 .append(temperatureMin)
                 .append(temperatureMax)
+                .append(temperaturaUnit)
+                .append(icon)
                 .toHashCode();
     }
 }

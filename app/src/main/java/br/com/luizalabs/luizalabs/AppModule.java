@@ -1,5 +1,8 @@
 package br.com.luizalabs.luizalabs;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -55,6 +58,16 @@ public class AppModule {
                 .addInterceptor(interceptor)
                 .addInterceptor(weatherApiInterceptor)
                 .build();
+    }
+
+    @Provides
+    public Gson provideGson(){
+        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+    }
+
+    @Provides
+    public SharedPreferences provideSharePreference(){
+        return app.getApplicationContext().getSharedPreferences("LuizaLabs",Context.MODE_PRIVATE);
     }
 
     @Provides

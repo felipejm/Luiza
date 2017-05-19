@@ -42,7 +42,7 @@ public class WeatherMapper {
         if(!apiWeatherInfos.isEmpty()) {
             ApiWeatherInfo apiWeatherInfo = apiWeatherInfos.get(0);
 
-            weather.setWeatherIconRes(getWeatherIcon(apiWeatherInfo.getId()));
+            weather.setIcon(apiWeatherInfo.getIcon());
             weather.setDescription(StringUtils.capitalize(apiWeatherInfo.getDescription()));
         }
 
@@ -54,32 +54,6 @@ public class WeatherMapper {
         }
 
         return weather;
-    }
-
-
-    @DrawableRes
-    private int getWeatherIcon(int weatherId){
-         if (isBetween(weatherId, 200, 299)) {
-            return R.drawable.weather_storm;
-
-        }else if (isBetween(weatherId, 300, 399)) {
-            return R.drawable.weather_drizzle;
-
-        }else if (isBetween(weatherId, 500, 599)) {
-            return R.drawable.weather_rain;
-
-        }else if (isBetween(weatherId, 600, 699)) {
-            return R.drawable.weather_snow;
-
-        }else if (isBetween(weatherId, 700, 799)) {
-            return R.drawable.weather_mist;
-
-        }else if (isBetween(weatherId, 800, 899)) {
-            return R.drawable.weather_clear;
-
-        }else {
-             return R.drawable.weather_clear;
-         }
     }
 
     private boolean isBetween(int x, int lower, int upper) {

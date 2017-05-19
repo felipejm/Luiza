@@ -45,11 +45,12 @@
 
             <ImageView
                 android:id="@+id/weather_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="fitCenter"
                 android:layout_below="@+id/city_name"
                 android:layout_marginTop="@dimen/space_ten"
-                android:src="@drawable/weather_clear" />
+                android:src="@drawable/ic_01d" />
 
             <TextView
                 android:id="@+id/temperature_description"

@@ -8,13 +8,6 @@
     android:background="@android:color/white"
     tools:context=".weather.views.cards.WeatherCardsFragment">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:theme="@style/ToolbarTheme"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:paddingTop="@dimen/space_ten"

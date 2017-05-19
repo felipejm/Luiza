@@ -13,12 +13,14 @@
         android:name=".App"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".weather.views.cards.WeatherActivity">
+        <activity android:name=".weather.views.WeatherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDuxo0f3QOIz4HOO_fIGiaJ35Rq-ipHEmg"/>
 
     </application>
 </manifest>

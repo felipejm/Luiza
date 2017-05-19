@@ -4,4 +4,5 @@
     <string name="temperature_format">%s°</string>
     <string name="min_temperature_format">Min %s°</string>
     <string name="max_temperature_format">Max %s°</string>
+    <string name="loading_weather_data">Carregando informaçoes</string>
 </resources>

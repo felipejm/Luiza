@@ -3,11 +3,9 @@ package br.com.luizalabs.luizalabs.weather.views.cards;
 import android.location.Location;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.SphericalUtil;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,13 +24,13 @@ import javax.inject.Inject;
 import br.com.luizalabs.luizalabs.App;
 import br.com.luizalabs.luizalabs.R;
 import br.com.luizalabs.luizalabs.weather.model.Weather;
+import br.com.luizalabs.luizalabs.weather.views.SwitchTemperatureUnitEvent;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class WeatherCardsFragment extends Fragment implements WeatherCardsView {
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    private WeatherCardsAdapter adapter;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -37,14 +38,16 @@ public class WeatherCardsFragment extends Fragment implements WeatherCardsView {
     @Inject
     WeatherCardsPresenter presenter;
 
+    public static WeatherCardsFragment newInstance() {
+        WeatherCardsFragment fragment = new WeatherCardsFragment();
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weather_cards, container, false);
         ButterKnife.bind(this, view);
-
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
-        activity.setSupportActionBar(toolbar);
 
         DaggerWeatherCardsComponent.builder()
                 .appComponent(App.getAppComponent())
@@ -52,27 +55,36 @@ public class WeatherCardsFragment extends Fragment implements WeatherCardsView {
                 .build()
                 .inject(this);
 
-        presenter.loadWeather();
+        presenter.loadWeathers();
         presenter.configureGoogleApiClient(getContext());
-
         return view;
     }
 
     @Override
     public void onStart() {
+        EventBus.getDefault().register(this);
         presenter.connectGoogleApiClient();
         super.onStart();
     }
 
     @Override
     public void onStop() {
+        EventBus.getDefault().unregister(this);
         presenter.disconnectGoogleApiClient();
         super.onStop();
     }
 
+    @Subscribe(sticky = true)
+    public void onSwitchTemperatureUnit(SwitchTemperatureUnitEvent event){
+        presenter.configureTemperatureUnit();
+        if(adapter != null){
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     public void configureWeatherCards(List<Weather> weathers) {
-        WeatherCardsAdapter adapter = new WeatherCardsAdapter(weathers);
+        adapter = new WeatherCardsAdapter(weathers);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setLayoutManager(layoutManager);
