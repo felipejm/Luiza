@@ -23,6 +23,7 @@ android {
 
         buildConfigField "String", "WEATHER_API_URL", "\"http://api.openweathermap.org\""
         buildConfigField "String", "WEATHER_API_KEY", "\"0165320650763a0a66d3a47610656bea\""
+        manifestPlaceholders = [ google_map_key:"AIzaSyDuxo0f3QOIz4HOO_fIGiaJ35Rq-ipHEmg"]
     }
 
     buildTypes {

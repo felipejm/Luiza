@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="br.com.luizalabs.luizalabs">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,6 +22,7 @@
             </intent-filter>
         </activity>
 
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDuxo0f3QOIz4HOO_fIGiaJ35Rq-ipHEmg"/>
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="${google_map_key}" tools:replace="android:value"/>
     </application>
 </manifest>
