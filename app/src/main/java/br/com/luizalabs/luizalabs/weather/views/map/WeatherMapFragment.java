@@ -1,65 +1,40 @@
 package br.com.luizalabs.luizalabs.weather.views.map;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.maps.android.SphericalUtil;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import br.com.luizalabs.luizalabs.App;
 import br.com.luizalabs.luizalabs.R;
-import br.com.luizalabs.luizalabs.utils.DrawableHelper;
-import br.com.luizalabs.luizalabs.utils.GoogleApiClientHelper;
 import br.com.luizalabs.luizalabs.utils.GoogleMapHelper;
-import br.com.luizalabs.luizalabs.utils.LocationHelper;
 import br.com.luizalabs.luizalabs.weather.model.Weather;
+import br.com.luizalabs.luizalabs.weather.model.WeatherInteractor;
 import br.com.luizalabs.luizalabs.weather.views.SwitchTemperatureUnitEvent;
-import br.com.luizalabs.luizalabs.weather.views.cards.DaggerWeatherCardsComponent;
-import br.com.luizalabs.luizalabs.weather.views.cards.WeatherCardsAdapter;
-import br.com.luizalabs.luizalabs.weather.views.cards.WeatherCardsModule;
-import br.com.luizalabs.luizalabs.weather.views.cards.WeatherCardsPresenter;
-import br.com.luizalabs.luizalabs.weather.views.cards.WeatherCardsView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import io.reactivex.Observable;
 
 public class WeatherMapFragment extends SupportMapFragment implements WeatherMapView {
 
-    public static final int ZOOM_LEVEL = 8;
-
     @Inject
     WeatherMapPresenter presenter;
+
+    private List<Marker> cityMarkers = new ArrayList<>();
+    private Circle centerCircle;
 
     public static WeatherMapFragment newInstance() {
         return new WeatherMapFragment();
@@ -77,24 +52,26 @@ public class WeatherMapFragment extends SupportMapFragment implements WeatherMap
 
         getMapAsync(googleMap -> {
             GoogleMapHelper.configureMap(googleMap);
-            drawCircleInCenter(googleMap);
-            googleMap.setInfoWindowAdapter(new InfoWindowAdapter(getContext()));
             presenter.loadWeather(googleMap);
+            googleMap.setInfoWindowAdapter(new InfoWindowAdapter(getContext()));
+            googleMap.setOnMarkerClickListener(marker -> {marker.showInfoWindow(); return true;});
+
+            googleMap.setOnCameraIdleListener(() -> {
+               presenter.onCameraChangePosition(googleMap, getContext());
+            });
         });
 
-        presenter.configureGoogleApiClient(getContext());
+        presenter.moveMapToLastLocation();
     }
 
     @Override
     public void onStart() {
-        presenter.connectGoogleApiClient();
         EventBus.getDefault().register(this);
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        presenter.diconnectGoogleApiClient();
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -111,19 +88,43 @@ public class WeatherMapFragment extends SupportMapFragment implements WeatherMap
     public void moveMapToMyLocation(LatLng lastLocation) {
         getMapAsync(googleMap -> {
             if(lastLocation != null) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, ZOOM_LEVEL));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, GoogleMapHelper.ZOOM_LEVEL));
+                drawCircleInCenter(googleMap, lastLocation);
             }
         });
     }
 
-    private void drawCircleInCenter(GoogleMap googleMap) {
-        Circle circle = googleMap.addCircle(new CircleOptions()
-                .center(googleMap.getCameraPosition().target)
-                .radius(50000)
+    @Override
+    public void createCityMarker(GoogleMap googleMap, Weather weather) {
+        LatLng cityLatLong = new LatLng(weather.getLatitude(), weather.getLongitude());
+        Marker cityMarker = googleMap.addMarker(new MarkerOptions().position(cityLatLong));
+        cityMarker.setTag(weather);
+        cityMarkers.add(cityMarker);
+    }
+
+    @Override
+    public void updateMarkersInfoWindow(){
+        Observable.fromIterable(cityMarkers)
+                .filter(Marker::isInfoWindowShown)
+                .subscribe(Marker::showInfoWindow);
+    }
+
+    @Override
+    public void removeAllCityMarkers(){
+        Observable.fromIterable(cityMarkers).subscribe(Marker::remove);
+    }
+
+    @Override
+    public void drawCircleInCenter(GoogleMap googleMap, LatLng position) {
+        if(centerCircle != null){
+            centerCircle.remove();
+        }
+
+        centerCircle = googleMap.addCircle(new CircleOptions()
+                .center(position)
+                .radius(WeatherInteractor.FIFITY_KM)
                 .strokeWidth(1)
                 .strokeColor(ContextCompat.getColor(getContext(), R.color.curious_blue))
                 .fillColor(ContextCompat.getColor(getContext(), R.color.cornflower_blue)));
-
-        googleMap.setOnCameraIdleListener(() -> circle.setCenter(googleMap.getCameraPosition().target));
     }
 }

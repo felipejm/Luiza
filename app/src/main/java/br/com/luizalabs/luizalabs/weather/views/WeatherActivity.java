@@ -1,7 +1,6 @@
 package br.com.luizalabs.luizalabs.weather.views;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,15 +19,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import br.com.luizalabs.luizalabs.App;
 import br.com.luizalabs.luizalabs.R;
 import br.com.luizalabs.luizalabs.utils.LocationHelper;
-import br.com.luizalabs.luizalabs.weather.model.Weather;
-import br.com.luizalabs.luizalabs.weather.views.cards.WeatherCardsAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -57,13 +51,14 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView{
                 .build()
                 .inject(this);
 
-        presenter.configureGoogleApiClient(this);
+        presenter.showLoadingFragment();
+        presenter.loadWeatherFromLocation(this);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        presenter.loadWeatherOfLastLocation();
+        presenter.loadWeatherFromLocationService();
     }
 
     @Override

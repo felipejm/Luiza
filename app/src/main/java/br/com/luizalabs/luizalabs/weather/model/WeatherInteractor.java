@@ -7,9 +7,11 @@ import java.util.List;
 import io.reactivex.Observable;
 
 public interface WeatherInteractor {
-    Observable<List<Weather>> getWeatherNearbyLocation(LatLng location);
+    int FIFITY_KM = 50000;
+
+    Observable<List<Weather>> getWeatherOfLocation(LatLng location);
 
     void setCache(List<Weather> weathers);
 
-    List<Weather> getCache();
+    Observable<List<Weather>> getCache();
 }

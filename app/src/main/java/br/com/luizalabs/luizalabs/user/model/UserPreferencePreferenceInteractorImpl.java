@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import br.com.luizalabs.luizalabs.weather.model.TEMPERATURA_UNIT;
+
 public class UserPreferencePreferenceInteractorImpl implements UserPreferenceInteractor {
 
     public static final String USER_PREFERENCES = "userPreferences";
@@ -14,6 +16,27 @@ public class UserPreferencePreferenceInteractorImpl implements UserPreferenceInt
     public UserPreferencePreferenceInteractorImpl(Gson gson, SharedPreferences sharedPreferences) {
         this.gson = gson;
         this.sharedPreferences = sharedPreferences;
+    }
+
+    @Override
+    public boolean hasLastLocation(){
+        UserPreference userPreference = get();
+        return userPreference.getLastLocationLatitude() != null && userPreference.getLastLocationLongitude() != null;
+    }
+
+    @Override
+    public void saveLastLocation(double latitude, double longitude){
+        UserPreference userPreference = get();
+        userPreference.setLastLocationLatitude(latitude);
+        userPreference.setLastLocationLongitude(longitude);
+        save(userPreference);
+    }
+
+    @Override
+    public void saveTemperatureUnit(TEMPERATURA_UNIT temperaturaUnit){
+        UserPreference userPreference = get();
+        userPreference.setTemperaturaUnit(temperaturaUnit);
+        save(userPreference);
     }
 
     @Override

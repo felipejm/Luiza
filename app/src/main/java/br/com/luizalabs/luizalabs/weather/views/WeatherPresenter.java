@@ -8,10 +8,10 @@ import android.view.MenuItem;
 import com.google.android.gms.maps.model.LatLng;
 
 public interface WeatherPresenter {
-    void configureGoogleApiClient(FragmentActivity context);
 
+    void loadWeatherFromLocation(FragmentActivity fragmentActivity);
 
-    void loadWeatherOfLastLocation();
+    void loadWeatherFromLocationService();
 
     void switchFragments();
 
@@ -22,4 +22,6 @@ public interface WeatherPresenter {
     void configureToolbarTemperatureUnitIcon(MenuItem item);
 
     boolean isNotShowingLoadingFragment();
+
+    void showLoadingFragment();
 }

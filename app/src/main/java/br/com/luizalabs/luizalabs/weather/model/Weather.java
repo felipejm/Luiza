@@ -42,6 +42,7 @@ public class Weather implements Serializable {
         }
     }
 
+
     public Double getLatitude() {
         return latitude;
     }

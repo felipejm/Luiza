@@ -15,6 +15,18 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class LocationHelper {
 
+    public static boolean distanceBetweenLessThen(LatLng origin, LatLng destine, int maxDistance){
+        float[] floats = new float[1];
+        Location.distanceBetween(origin.latitude, origin.longitude,destine.latitude, destine.longitude, floats);
+        return floats[0] <= maxDistance;
+    }
+
+    public static float distanceBetween(LatLng origin, LatLng destine){
+        float[] floats = new float[1];
+        Location.distanceBetween(origin.latitude, origin.longitude,destine.latitude, destine.longitude, floats);
+        return floats[0];
+    }
+
     public static boolean isLocationAvailable(GoogleApiClient googleApiClient) {
         LocationAvailability locationAvailability = LocationServices.FusedLocationApi.getLocationAvailability(googleApiClient);
         return locationAvailability == null || locationAvailability.isLocationAvailable();

@@ -4,16 +4,17 @@ import android.content.Context;
 import android.location.Location;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
 public interface WeatherMapPresenter {
 
     void loadWeather(GoogleMap googleMap);
 
-    void configureGoogleApiClient(Context context);
+    void onCameraChangePosition(GoogleMap googleMap, Context context);
 
-    void connectGoogleApiClient();
+    void saveLastLocation(LatLng lastLocation);
 
-    void diconnectGoogleApiClient();
+    void loadWeatherFromLocation(GoogleMap googleMap, LatLng location);
 
     void switchTemperatureUnit();
 

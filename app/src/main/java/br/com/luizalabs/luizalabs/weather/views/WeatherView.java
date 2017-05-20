@@ -4,10 +4,6 @@ import android.support.v4.app.Fragment;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.util.List;
-
-import br.com.luizalabs.luizalabs.weather.model.Weather;
-
 public interface WeatherView {
     void showLocationRequiredDialog(GoogleApiClient googleApiClient);
 

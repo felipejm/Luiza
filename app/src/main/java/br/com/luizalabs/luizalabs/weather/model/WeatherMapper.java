@@ -1,8 +1,6 @@
 
 package br.com.luizalabs.luizalabs.weather.model;
 
-import android.support.annotation.DrawableRes;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -10,8 +8,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import br.com.luizalabs.luizalabs.R;
-import br.com.luizalabs.luizalabs.utils.DrawableHelper;
 import br.com.luizalabs.luizalabs.weather.api.ApiWeatherCity;
 import br.com.luizalabs.luizalabs.weather.api.ApiWeatherCoord;
 import br.com.luizalabs.luizalabs.weather.api.ApiWeatherInfo;

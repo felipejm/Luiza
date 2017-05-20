@@ -21,8 +21,8 @@ public class InteractorModule {
 
     @Provides
     @Singleton
-    public WeatherInteractor provideWeatherInteractor(WeatherApi weatherApi, WeatherMapper mapper){
-        return new WeatherInteractorImpl(weatherApi, mapper);
+    public WeatherInteractor provideWeatherInteractor(App app,Gson gson, SharedPreferences preferences, WeatherApi weatherApi, WeatherMapper mapper){
+        return new WeatherInteractorImpl(app.getApplicationContext(), gson, preferences, weatherApi, mapper);
     }
 
     @Provides
