@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Luiza Weather</string>
+    <string name="app_name">Luiza Weather Precition</string>
 
     <string name="temperature_format">%s°</string>
     <string name="min_temperature_format">Min %s°</string>
