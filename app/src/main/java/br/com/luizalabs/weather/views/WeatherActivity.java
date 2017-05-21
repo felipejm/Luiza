@@ -3,8 +3,10 @@ package br.com.luizalabs.weather.views;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,14 +17,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-import br.com.luizalabs.App;
 import br.com.luizalabs.R;
+import br.com.luizalabs.app.App;
 import br.com.luizalabs.utils.LocationHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,13 +55,21 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView {
                 .inject(this);
 
         presenter.showLoadingFragment();
-        presenter.loadWeatherFromLocation(this);
+        presenter.loadWeatherByLastLocation(this);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        presenter.loadWeatherFromLocationService();
+        presenter.loadWeatherWithLocationService(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == LocationHelper.LOCATION_SETTING_REQUEST_CODE){
+            presenter.loadWeatherWithLocationService(this);
+        }
     }
 
     @Override
@@ -134,5 +145,25 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        presenter.loadWeatherWithLocationService(this);
+        presenter.removeRequestLocationUpdate(this);
 
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        presenter.loadWeatherWithLocationService(this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }

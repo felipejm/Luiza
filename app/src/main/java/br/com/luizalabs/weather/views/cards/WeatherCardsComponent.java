@@ -1,7 +1,7 @@
 package br.com.luizalabs.weather.views.cards;
 
-import br.com.luizalabs.AppComponent;
-import br.com.luizalabs.AppScope;
+import br.com.luizalabs.app.AppComponent;
+import br.com.luizalabs.app.AppScope;
 import dagger.Component;
 
 @AppScope

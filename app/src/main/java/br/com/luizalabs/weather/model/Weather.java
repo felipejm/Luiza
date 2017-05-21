@@ -19,23 +19,23 @@ public class Weather implements Serializable {
     private String temperature;
     private String temperatureMin;
     private String temperatureMax;
-    private TEMPERATURA_UNIT temperaturaUnit = TEMPERATURA_UNIT.CELSIUS;
+    private TemperatureUnitEnum temperaturaUnit = TemperatureUnitEnum.CELSIUS;
 
     private String icon;
 
-    public void changeTemperatureUnit(TEMPERATURA_UNIT temperaturaUnit) {
-        if (this.temperaturaUnit == TEMPERATURA_UNIT.CELSIUS
-                && temperaturaUnit == TEMPERATURA_UNIT.FAHRENHEIT) {
+    public void changeTemperatureUnit(TemperatureUnitEnum temperaturaUnit) {
+        if (this.temperaturaUnit == TemperatureUnitEnum.CELSIUS
+                && temperaturaUnit == TemperatureUnitEnum.FAHRENHEIT) {
 
-            this.temperaturaUnit = TEMPERATURA_UNIT.FAHRENHEIT;
+            this.temperaturaUnit = TemperatureUnitEnum.FAHRENHEIT;
             temperature = TemperatureConverterHelper.convertCelsiusToFahrenheit(temperature);
             temperatureMin = TemperatureConverterHelper.convertCelsiusToFahrenheit(temperatureMin);
             temperatureMax = TemperatureConverterHelper.convertCelsiusToFahrenheit(temperatureMax);
 
-        } else if (this.temperaturaUnit == TEMPERATURA_UNIT.FAHRENHEIT
-                && temperaturaUnit == TEMPERATURA_UNIT.CELSIUS) {
+        } else if (this.temperaturaUnit == TemperatureUnitEnum.FAHRENHEIT
+                && temperaturaUnit == TemperatureUnitEnum.CELSIUS) {
 
-            this.temperaturaUnit = TEMPERATURA_UNIT.CELSIUS;
+            this.temperaturaUnit = TemperatureUnitEnum.CELSIUS;
             temperature = TemperatureConverterHelper.convertFahrenheitToCelsius(temperature);
             temperatureMin = TemperatureConverterHelper.convertFahrenheitToCelsius(temperatureMin);
             temperatureMax = TemperatureConverterHelper.convertFahrenheitToCelsius(temperatureMax);
@@ -67,11 +67,11 @@ public class Weather implements Serializable {
         this.icon = icon;
     }
 
-    public TEMPERATURA_UNIT getTemperaturaUnit() {
+    public TemperatureUnitEnum getTemperaturaUnit() {
         return temperaturaUnit;
     }
 
-    public void setTemperaturaUnit(TEMPERATURA_UNIT temperaturaUnit) {
+    public void setTemperaturaUnit(TemperatureUnitEnum temperaturaUnit) {
         this.temperaturaUnit = temperaturaUnit;
     }
 

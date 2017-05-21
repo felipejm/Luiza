@@ -3,11 +3,15 @@ package br.com.luizalabs.weather.views;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 
+import com.google.android.gms.location.LocationListener;
+
 public interface WeatherPresenter {
 
-    void loadWeatherFromLocation(FragmentActivity fragmentActivity);
+    void loadWeatherByLastLocation(FragmentActivity fragmentActivity);
 
-    void loadWeatherFromLocationService();
+    void loadWeatherWithLocationService(FragmentActivity fragmentActivity);
+
+    void removeRequestLocationUpdate(LocationListener locationListener);
 
     void switchFragments();
 

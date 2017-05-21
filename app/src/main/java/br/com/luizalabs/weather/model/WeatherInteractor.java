@@ -9,7 +9,7 @@ import io.reactivex.Observable;
 public interface WeatherInteractor {
     int FIFITY_KM = 50000;
 
-    Observable<List<Weather>> getFromLocation(LatLng location);
+    Observable<List<Weather>> listByLocation(LatLng location);
 
     Observable<List<Weather>> getCache();
 

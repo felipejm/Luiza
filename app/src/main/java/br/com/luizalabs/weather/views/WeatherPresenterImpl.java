@@ -1,14 +1,11 @@
 package br.com.luizalabs.weather.views;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -17,13 +14,12 @@ import br.com.luizalabs.user.model.UserPreference;
 import br.com.luizalabs.user.model.UserPreferenceInteractor;
 import br.com.luizalabs.utils.LocationHelper;
 import br.com.luizalabs.utils.RxComposer;
-import br.com.luizalabs.weather.model.TEMPERATURA_UNIT;
+import br.com.luizalabs.weather.model.TemperatureUnitEnum;
 import br.com.luizalabs.weather.model.WeatherInteractor;
 import br.com.luizalabs.weather.views.cards.WeatherCardsFragment;
 import br.com.luizalabs.weather.views.map.WeatherMapFragment;
 
-public class WeatherPresenterImpl implements WeatherPresenter,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class WeatherPresenterImpl implements WeatherPresenter {
 
     private UserPreferenceInteractor userPreferenceInteractor;
     private WeatherInteractor interactor;
@@ -39,7 +35,7 @@ public class WeatherPresenterImpl implements WeatherPresenter,
     }
 
     @Override
-    public void loadWeatherFromLocation(FragmentActivity fragmentActivity) {
+    public void loadWeatherByLastLocation(FragmentActivity fragmentActivity) {
         if (userPreferenceInteractor.hasLastLocation()) {
             UserPreference userPreference = userPreferenceInteractor.get();
             LatLng lastLocation = new LatLng(userPreference.getLastLocationLatitude(), userPreference.getLastLocationLongitude());
@@ -50,30 +46,23 @@ public class WeatherPresenterImpl implements WeatherPresenter,
     }
 
     @Override
-    public void loadWeatherFromLocationService() {
+    public void loadWeatherWithLocationService(FragmentActivity fragmentActivity) {
         if (LocationHelper.isLocationAvailable(googleApiClient) && view.hasLocationPermission()) {
             LatLng lastLocation = LocationHelper.getLastLocation(googleApiClient);
             loadWeathers(lastLocation);
             userPreferenceInteractor.saveLastLocation(lastLocation.latitude, lastLocation.longitude);
 
-        } else {
+        } else if(!view.hasLocationPermission()){
             view.showLocationRequiredDialog(googleApiClient);
+
+        }else{
+            LocationHelper.requestLocation(googleApiClient, fragmentActivity, view);
         }
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        loadWeatherFromLocationService();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+    public void removeRequestLocationUpdate(LocationListener locationListener){
+        LocationHelper.removeLocationRequestUpdate(googleApiClient, locationListener);
     }
 
     @Override
@@ -108,14 +97,14 @@ public class WeatherPresenterImpl implements WeatherPresenter,
     public void switchToolbarTemperatureUnitIcon(MenuItem item) {
         UserPreference userPreference = userPreferenceInteractor.get();
 
-        if (userPreference.getTemperaturaUnit() == TEMPERATURA_UNIT.CELSIUS) {
+        if (userPreference.getTemperaturaUnit() == TemperatureUnitEnum.CELSIUS) {
             item.setIcon(R.drawable.ic_fahrenheit);
             item.setTitle(R.string.change_to_celsius);
-            userPreferenceInteractor.saveTemperatureUnit(TEMPERATURA_UNIT.FAHRENHEIT);
+            userPreferenceInteractor.saveTemperatureUnit(TemperatureUnitEnum.FAHRENHEIT);
         } else {
             item.setIcon(R.drawable.ic_celsius);
             item.setTitle(R.string.change_to_fahrenheit);
-            userPreferenceInteractor.saveTemperatureUnit(TEMPERATURA_UNIT.CELSIUS);
+            userPreferenceInteractor.saveTemperatureUnit(TemperatureUnitEnum.CELSIUS);
         }
     }
 
@@ -123,7 +112,7 @@ public class WeatherPresenterImpl implements WeatherPresenter,
     public void configureToolbarTemperatureUnitIcon(MenuItem item) {
         UserPreference userPreference = userPreferenceInteractor.get();
 
-        if (userPreference.getTemperaturaUnit() == TEMPERATURA_UNIT.CELSIUS) {
+        if (userPreference.getTemperaturaUnit() == TemperatureUnitEnum.CELSIUS) {
             item.setIcon(R.drawable.ic_celsius);
             item.setTitle(R.string.change_to_fahrenheit);
         } else {
@@ -141,16 +130,16 @@ public class WeatherPresenterImpl implements WeatherPresenter,
     private void configureGoogleApiClient(FragmentActivity activity) {
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(activity)
-                    .enableAutoManage(activity, this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
+                    .enableAutoManage(activity, view)
+                    .addConnectionCallbacks(view)
+                    .addOnConnectionFailedListener(view)
                     .addApi(LocationServices.API)
                     .build();
         }
     }
 
     private void loadWeathers(LatLng lastLocation) {
-        interactor.getFromLocation(lastLocation)
+        interactor.listByLocation(lastLocation)
                 .compose(RxComposer.newThread())
                 .subscribe(weathers -> {
                     if (weathers.isEmpty()) {

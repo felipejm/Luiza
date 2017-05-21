@@ -1,4 +1,4 @@
-package br.com.luizalabs;
+package br.com.luizalabs.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +9,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.Locale;
 
+import br.com.luizalabs.BuildConfig;
 import br.com.luizalabs.weather.api.WeatherApi;
 import dagger.Module;
 import dagger.Provides;

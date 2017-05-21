@@ -1,4 +1,4 @@
-package br.com.luizalabs;
+package br.com.luizalabs.app;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

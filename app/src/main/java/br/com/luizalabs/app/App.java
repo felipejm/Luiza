@@ -1,4 +1,4 @@
-package br.com.luizalabs;
+package br.com.luizalabs.app;
 
 import android.app.Application;
 import android.support.v7.app.AppCompatDelegate;

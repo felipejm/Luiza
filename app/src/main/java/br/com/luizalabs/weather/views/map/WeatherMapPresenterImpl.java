@@ -45,7 +45,7 @@ public class WeatherMapPresenterImpl implements WeatherMapPresenter {
     @Override
     public void loadWeatherFromLocation(GoogleMap googleMap, LatLng location) {
         UserPreference userPreference = userPreferenceInteractor.get();
-        interactor.getFromLocation(location)
+        interactor.listByLocation(location)
                 .compose(RxComposer.newThread())
                 .doOnNext(weathers -> {
                     this.weathers = weathers;

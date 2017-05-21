@@ -1,13 +1,16 @@
 package br.com.luizalabs.user.model;
 
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 
-import br.com.luizalabs.weather.model.TEMPERATURA_UNIT;
+import br.com.luizalabs.weather.model.TemperatureUnitEnum;
 
 public class UserPreference implements Serializable {
 
-    private TEMPERATURA_UNIT temperaturaUnit = TEMPERATURA_UNIT.CELSIUS;
+    private TemperatureUnitEnum temperaturaUnit = TemperatureUnitEnum.CELSIUS;
     private Double lastLocationLatitude;
     private Double lastLocationLongitude;
 
@@ -27,11 +30,35 @@ public class UserPreference implements Serializable {
         this.lastLocationLongitude = lastLocationLongitude;
     }
 
-    public TEMPERATURA_UNIT getTemperaturaUnit() {
+    public TemperatureUnitEnum getTemperaturaUnit() {
         return temperaturaUnit;
     }
 
-    public void setTemperaturaUnit(TEMPERATURA_UNIT temperaturaUnit) {
+    public void setTemperaturaUnit(TemperatureUnitEnum temperaturaUnit) {
         this.temperaturaUnit = temperaturaUnit;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserPreference that = (UserPreference) o;
+
+        return new EqualsBuilder()
+                .append(temperaturaUnit, that.temperaturaUnit)
+                .append(lastLocationLatitude, that.lastLocationLatitude)
+                .append(lastLocationLongitude, that.lastLocationLongitude)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(temperaturaUnit)
+                .append(lastLocationLatitude)
+                .append(lastLocationLongitude)
+                .toHashCode();
     }
 }

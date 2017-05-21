@@ -8,7 +8,7 @@ import retrofit2.http.Query;
 public interface WeatherApi {
 
     @GET("/data/2.5/box/city")
-    Observable<ApiWeathers> getForArea(@Query("bbox") String area);
+    Observable<ApiWeathers> listByArea(@Query("bbox") String area);
 
 
 }

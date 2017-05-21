@@ -16,8 +16,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import br.com.luizalabs.App;
 import br.com.luizalabs.R;
+import br.com.luizalabs.app.App;
 import br.com.luizalabs.weather.model.Weather;
 import br.com.luizalabs.weather.views.SwitchTemperatureUnitEvent;
 import butterknife.BindView;
