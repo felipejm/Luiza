@@ -1,1 +1,1 @@
-# Luiza Weather Precition App
+# Luiza Weather Prediction App
