@@ -32,7 +32,6 @@ public class WeatherInteractorTest {
     private WeatherMapper mapper = new WeatherMapper();
     private WeatherInteractor interactor;
 
-    private String weatherJsonMock = "[{\"latitude\":-8.05428,\"longitude\":-34.8813,\"cityName\":\"Name\",\"description\":\"Description\",\"temperature\":\"1\",\"temperatureMin\":\"1\",\"temperatureMax\":\"1\",\"temperaturaUnit\":\"CELSIUS\",\"icon\":\"ic_icon\"}]";
     private LatLng recifeLocation = new LatLng(-8.05428, -34.8813);
     private LatLng saoPauloLocation = new LatLng(-23.5505, -46.6333);
 
